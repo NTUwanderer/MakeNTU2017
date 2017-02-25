@@ -28,6 +28,14 @@ client.on('connectFailed', function(error) {
 
 let theConnection = null;
 
+const closeTheGlasses = () => {
+	console.log("closeTheGlasses");
+}
+
+const openTheGlasses = () => {
+	console.log("openTheGlasses");
+}
+
 client.on('connect', function(connection) {
 	theConnection = connection;
     console.log('WebSocket Client Connected');
@@ -41,8 +49,11 @@ client.on('connect', function(connection) {
         if (message.type === 'utf8') {
             // console.log("Received: '" + message.utf8Data + "'");
 			console.log(message);
-		} else {
-			console.log("my message: ", message.CM);
+
+			if (message.utf8Data === "Close the glasses.")
+				closeTheGlasses();
+			else if (message.utf8Data === "Open the glasses.")
+				openTheGlasses();
 		}
     });
 

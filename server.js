@@ -1,27 +1,81 @@
 var WebSocketServer = require('websocket').server;
 var http = require('http');
 
-let lastTime = null;
 let totalTimeWatchingScreen = 0;
 // const one_minute_array = [];
 
 const threshold_dis = 60;
 
+const interval = 300;
+
+const time_array = [];
+
+let time_near = 0;
+let time_far = 0;
+let total_time = 0;
+let open = true;
+
+let time_close = 0;
+
+const closeTheGlasses = (time) => {
+    if (theConnection !== null)
+        theConnection.send("Close the glasses.");
+    
+    open = false;
+    time_array = [];
+    time_near = 0;
+    time_far = 0;
+    total_time = 0;
+    time_close = time;
+}
+
+const openTheGlasses = () => {
+    if (theConnection !== null)
+        theConnection.send("Open the glasses.");
+
+    open = true;
+}
+
 const storeDistance = (data) => {
     delete data.MS;
 
-    if (lastTime != null && data.CM < threshold_dis)
-        totalTimeWatchingScreen += data.time - lastTime;
+    if (open) {
+        let size = time_array.length;
+        if (size !== 0) {
+            let delta = data.time - time_array[size - 1].time;
+            if (data.CM < threshold_dis)
+                time_near += delta;
+            else
+                time_far  += delta;
+            total_time += delta;
+        }
 
-    lastTime = data.time;
+        time_array.push(data);
 
-	console.log(totalTimeWatchingScreen);
-	console.log(data);
+        if (size === interval + 1) {
+            let delta = time_array[1].time - time_array[0].time;
+            if (time_array[0].CM < threshold_dis)
+                time_near -= delta;
+            else
+                time_far  -= delta;
+            total_time -= delta;
+
+            time_array.shift();
+        }
+
+        if (time_near > 0.7 * total_time) {
+            closeTheGlasses(data.time);
+        }
+    } else {
+        if (data.time > time_close + interval * 1000) {
+            openTheGlasses();
+        }
+    }
 
     if (theSocket !== null) {
         theSocket.emit('disdata', data);
         theSocket.broadcast.emit('disdata', data);
-	console.log('emit on disdata');
+    	console.log('emit on disdata');
     }
 	
 //    if (one_minute_array.length == 60)
