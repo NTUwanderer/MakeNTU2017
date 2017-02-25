@@ -16,9 +16,14 @@ const storeDistance = (data) => {
     lastTime = data.time;
 
 	console.log(totalTimeWatchingScreen);
+	console.log(data);
 
-    theSocket.emit('dis_data', data);
-
+    if (theSocket !== null) {
+        theSocket.emit('disdata', data);
+        theSocket.broadcast.emit('disdata', data);
+	console.log('emit on disdata');
+    }
+	
 //    if (one_minute_array.length == 60)
 //        one_minute_array.splice(0, 1);
 
@@ -96,9 +101,10 @@ app.get('/', function (req, res) {
 let theSocket = null;
 
 io.on('connection', (socket) => {
-    if (theSocket !== null)
+    if (theSocket === null)
         theSocket = socket;
-    
+
+	// console.log('theSocket Init:', theSocket);    
     socket.emit('news', { hello: 'world' });
 
     // socket.on('getmessage', data => {
@@ -106,11 +112,12 @@ io.on('connection', (socket) => {
     // });
 
     socket.on('disconnect', () => {
+	theSocket = null;
         console.log('disconnected...');
     });
 
 });
 
-httpServer.listen(3000, function () {
+httpServer.listen(3009, function () {
   console.log('Example app listening on port 3000!')
 });

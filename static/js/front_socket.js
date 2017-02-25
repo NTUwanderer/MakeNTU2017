@@ -1,9 +1,9 @@
-const socket = io.connect('http://haglass.japaneast.cloudapp.azure.com:3000/');
+const socket = io.connect('http://haglass.japaneast.cloudapp.azure.com:3009/');
 
 socket.on('news', (data) => {
   console.log(data);
 });
 
-socket.on('dis_data', (data) => {
+socket.on('disdata', (data) => {
 	console.log(data);
 })
