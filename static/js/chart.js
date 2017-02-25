@@ -1,5 +1,13 @@
+const socket = io.connect('http://haglass.japaneast.cloudapp.azure.com:3000/');
+
+socket.on('news', (data) => {
+  console.log(data);
+});
+
 google.charts.load('current', {packages: ['corechart', 'line']});
 google.charts.setOnLoadCallback(drawBasic);
+
+var initialX = 0;
 
 function drawBasic() {
   var data = new google.visualization.DataTable();
@@ -28,29 +36,35 @@ function drawBasic() {
 
   var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
   function drawChart() {
-    // Disabling the button while the chart is drawing.
-    google.visualization.events.addListener(chart, 'ready', function(){console.log('chart get ready!');});
     chart.draw(data, options);
   }
 
-  var initialX = 1;
-  var testData = function() {
+  var addData = function(newData) {
+console.log('I got newData: ', newData);
     if (data.getNumberOfRows() > 30) {
       data.removeRow(0);
     options.hAxis.viewWindow.min += 1;
     options.hAxis.viewWindow.max += 1;
     }
     // Generating a random x, y pair and inserting it so rows are sorted.
-    var x = initialX;
-    ++initialX;
-    var y = Math.floor(Math.random() * 100);
+	if ( initialX === 0 ) {
+		initialX = newData.time;
+    	x = 0;
+	} else {
+    	x = (newData.time - initialX) / 1000;
+	}
+	var y = (newData.CM > 500 ? 0 : newData.CM);
     var where = data.getNumberOfRows();
     data.insertRows(where, [[x, y]]);
     drawChart();
   }
   drawChart();
 
-  var intervalID = setInterval(testData, 1000);
+socket.on('disdata', (data) => {
+	addData(data);
+});
+
+  // var intervalID = setInterval(testData, 1000);
 }
 
 

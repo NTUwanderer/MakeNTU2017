@@ -6,9 +6,9 @@ let totalTimeWatchingScreen = 0;
 
 const threshold_dis = 60;
 
-const interval = 300;
+const interval = 30;
 
-const time_array = [];
+let time_array = [];
 
 let time_near = 0;
 let time_far = 0;
@@ -61,14 +61,12 @@ const storeDistance = (data) => {
             total_time -= delta;
 
             time_array.shift();
-        }
-
-        if (time_near > 0.7 * total_time) {
-            closeTheGlasses(data.time);
-        }
-    } else {
-        if (data.time > time_close + interval * 1000) {
-            openTheGlasses();
+        	if (time_near > 0.7 * total_time) {
+        	    closeTheGlasses(data.time);
+        	}
+			else if (data.time > time_close + interval * 1000) {
+        	    openTheGlasses();
+        	}
         }
     }
 
@@ -172,6 +170,6 @@ io.on('connection', (socket) => {
 
 });
 
-httpServer.listen(3009, function () {
+httpServer.listen(3000, function () {
   console.log('Example app listening on port 3000!')
 });
