@@ -5,6 +5,10 @@ var client = new WebSocketClient();
 const spawn = require('child_process').spawn;
 const command = spawn('python2', ['hahaha.py']);
 
+const connectToServer = () => {
+	client.connect('ws://haglass.japaneast.cloudapp.azure.com:3001/', 'echo-protocol');
+}
+
 command.stdout.on('data', (data) => {
 	console.log(`stdout: ${data}`);
 	let object = null;
@@ -18,6 +22,8 @@ command.stdout.on('data', (data) => {
 		object.time = temp_date.getTime();
 		if (theConnection != null) {
 			theConnection.send(JSON.stringify(object));
+		} else {
+			connectToServer();
 		}
 	}
 });
@@ -44,6 +50,7 @@ client.on('connect', function(connection) {
     });
     connection.on('close', function() {
         console.log('echo-protocol Connection Closed');
+        theConnection = null;
     });
     connection.on('message', function(message) {
         if (message.type === 'utf8') {
@@ -59,5 +66,4 @@ client.on('connect', function(connection) {
 
 });
 
-client.connect('ws://haglass.japaneast.cloudapp.azure.com:3001/', 'echo-protocol');
-
+connectToServer();
