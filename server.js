@@ -109,7 +109,7 @@ io.on('connection', (socket) => {
         console.log('disconnected...');
     });
 
-})
+});
 
 httpServer.listen(3000, function () {
   console.log('Example app listening on port 3000!')
