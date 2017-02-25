@@ -36,10 +36,12 @@ let theConnection = null;
 
 const closeTheGlasses = () => {
 	console.log("closeTheGlasses");
+	const command = spawn('sudo', ['python2', 'high_low.py', 'F']);
 }
 
 const openTheGlasses = () => {
 	console.log("openTheGlasses");
+	const command = spawn('sudo', ['python2', 'high_low.py', 'T']);
 }
 
 client.on('connect', function(connection) {
