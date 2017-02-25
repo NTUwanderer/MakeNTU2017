@@ -1,6 +1,30 @@
 var WebSocketServer = require('websocket').server;
 var http = require('http');
 
+let lastTime = null;
+let totalTimeWatchingScreen = 0;
+// const one_minute_array = [];
+
+const threshold_dis = 60;
+
+const storeDistance = (data) => {
+    delete data.MS;
+
+    if (lastTime != null && data.CM < threshold_dis)
+        totalTimeWatchingScreen += data.time - lastTime;
+
+    lastTime = data.time;
+
+	console.log(totalTimeWatchingScreen);
+
+//    if (one_minute_array.length == 60)
+//        one_minute_array.splice(0, 1);
+
+//     one_minute_array.push(data);
+
+    // Store in database;
+}
+
 var server = http.createServer(function(request, response) {
     console.log((new Date()) + ' Received request for ' + request.url);
     response.writeHead(404);
@@ -42,7 +66,7 @@ wsServer.on('request', function(request) {
     theConnection.on('message', function(message) {
         if (message.type === 'utf8') {
             console.log('Received Message: ' + message.utf8Data);
-            theConnection.sendUTF(message.utf8Data);
+            storeDistance(JSON.parse(message.utf8Data));
         }
         else if (message.type === 'binary') {
             console.log('Received Binary Message of ' + message.binaryData.length + ' bytes');
