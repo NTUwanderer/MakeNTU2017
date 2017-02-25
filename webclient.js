@@ -3,12 +3,15 @@ var WebSocketClient = require('websocket').client;
 var client = new WebSocketClient();
 
 const spawn = require('child_process').spawn;
-const command = spawn('ls', ['-lh', '/usr']);
+const command = spawn('python2', ['hahaha.py']);
 
 command.stdout.on('data', (data) => {
 	console.log(`stdout: ${data}`);
+	let object = JSON.parse(data);
+	let temp_date = new Date();
+	object.time = temp_date.getTime();
 	if (theConnection != null) {
-		theConnection.sendUTF(object);
+		theConnection.send(JSON.stringify(object));
 	}
 });
 
@@ -38,5 +41,5 @@ client.on('connect', function(connection) {
 
 });
 
-client.connect('ws://192.168.2.190:8080/', 'echo-protocol');
+client.connect('ws://haglass.japaneast.cloudapp.azure.com:3001/', 'echo-protocol');
 
