@@ -64,10 +64,9 @@ const storeDistance = (data) => {
         	if (time_near > 0.7 * total_time) {
         	    closeTheGlasses(data.time);
         	}
-			else if (data.time > time_close + interval * 1000) {
-        	    openTheGlasses();
-        	}
         }
+    } else if (data.time > time_close + interval * 1000) {
+        openTheGlasses();
     }
 
     if (theSocket !== null) {
