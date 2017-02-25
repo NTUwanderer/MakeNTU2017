@@ -7,11 +7,18 @@ const command = spawn('python2', ['hahaha.py']);
 
 command.stdout.on('data', (data) => {
 	console.log(`stdout: ${data}`);
-	let object = JSON.parse(data);
-	let temp_date = new Date();
-	object.time = temp_date.getTime();
-	if (theConnection != null) {
-		theConnection.send(JSON.stringify(object));
+	let object = null;
+	try {
+		object = JSON.parse(data);
+	} catch (e) {
+		console.log(e);
+	}
+	if (object !== null) {
+		let temp_date = new Date();
+		object.time = temp_date.getTime();
+		if (theConnection != null) {
+			theConnection.send(JSON.stringify(object));
+		}
 	}
 });
 
