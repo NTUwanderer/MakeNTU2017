@@ -36,16 +36,20 @@ const closeTheGlasses = (time) => {
     total_time = 0;
     time_close = time;
 
-    theSocket.emit('status', false);
-    theSocket.broadcast.emit('status', false);
+	if ( theSocket !== null ) {
+    	theSocket.emit('status', false);
+    	theSocket.broadcast.emit('status', false);
+	}
 }
 
 const openTheGlasses = () => {
     if (theConnection !== null)
         theConnection.send("Open the glasses.");
 
-    theSocket.emit('status', true);
-    theSocket.broadcast.emit('status', true);
+	if ( theSocket !== null ) {
+    	theSocket.emit('status', true);
+    	theSocket.broadcast.emit('status', true);
+	}
     open = true;
 }
 
