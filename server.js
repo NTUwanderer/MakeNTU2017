@@ -6,7 +6,7 @@ let totalTimeWatchingScreen = 0;
 
 const threshold_dis = 60;
 
-const interval = 30;
+const interval = 10;
 
 let time_array = [];
 
@@ -65,7 +65,7 @@ const storeDistance = (data) => {
 
         time_array.push(data);
 
-        if (size === interval + 1) {
+        if (size >= interval + 1) {
             let delta = time_array[1].time - time_array[0].time;
             if (time_array[0].CM < threshold_dis)
                 time_near -= delta;

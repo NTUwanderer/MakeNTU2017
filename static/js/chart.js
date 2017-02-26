@@ -16,15 +16,16 @@ function drawBasic() {
   data.addRows([[0,0]]);
 
   var options = {
-    width: 500,
+    width: 800,
     height: 300,
+	chartArea: { left:60,top:30,width:'78%',height:'75%'},
     hAxis: {
       title: 'Time',
       viewWindow: {min:0, max:29}
     },
     vAxis: {
       title: 'Distance',
-	    minValue: 0
+	  minValue: 0
     },
     animation: {
       duration: 1,
