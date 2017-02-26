@@ -17,6 +17,14 @@ let open = true;
 
 let time_close = 0;
 
+const reset = () => {
+    time_array = [];
+    time_near = 0;
+    time_far = 0;
+    total_time = 0;
+    open = true;
+}
+
 const closeTheGlasses = (time) => {
     if (theConnection !== null)
         theConnection.send("Close the glasses.");
@@ -168,7 +176,8 @@ io.on('connection', (socket) => {
     // });
 
     socket.on('disconnect', () => {
-	theSocket = null;
+        theSocket = null;
+        reset();
         console.log('disconnected...');
     });
 
